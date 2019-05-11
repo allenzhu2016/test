@@ -2,7 +2,7 @@
     "name": "allenzhu2016/test",
     "description": "test用请勿使用",
     "type": "project",
-    "require": {
+    "require-dev": {
         "squizlabs/php_codesniffer": "^3.4",
 		  "php": ">=7.0.0"
     },
