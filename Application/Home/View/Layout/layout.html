@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width"
+          name="viewport">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title></title>
+    <!-- Bootstrap core CSS -->
+    <link href="__PUBLIC__/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/dist-select/css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/dist/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <link href="__PUBLIC__/vendor/bootstrap-validator/bootstrapValidator.min.css" rel="stylesheet" media="screen">
+    <link href="__PUBLIC__/vendor/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="__PUBLIC__/vendor/bootcomplete.js-master/dist/bootcomplete.css">
+    <link rel="stylesheet" href="__PUBLIC__/vendor/summernote/dist/summernote.css">
+    <link rel="stylesheet" href="__PUBLIC__/css/iconfont.css">
+    <link rel="shortcut icon" href="__PUBLIC__/images/favicon.ico"/>
+    <link rel="stylesheet" href="__PUBLIC__/css/customer.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <style>
+        @media (min-width: 768px) and (max-width: 1199px) {
+
+            .navbar-collapse.collapse {
+                display: none !important;
+            }
+
+            .navbar-collapse.collapse.in {
+                display: block !important;
+            }
+
+            .navbar-header .collapse, .navbar-toggle {
+                display: block !important;
+            }
+
+            .navbar-header {
+                float: none;
+            }
+        }
+
+        body{
+            background:url(__PUBLIC__/images/background.jpg)  no-repeat center center;
+            background-size:cover;
+            background-attachment:fixed;
+            background-color:#CCCCCC;
+        }
+    </style>
+</head>
+<body>
+<div id="go-top" class="iconfont icon-cc-top"></div>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" style="color: white" href="<{:U('Pay/index')}>">AC-Accounting</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="<{:U('Pay/index')}>">待付款录入</a></li>
+                <li><a href="<{:U('Pay/check')}>">已录入查询</a></li>
+                <li><a href="<{:U('Pay/readytopay')}>">待付款支付</a></li>
+                <li><a href="<{:U('Pay/paid')}>">已支付查询</a></li>
+                <li><a href="<{:U('Client/printing')}>">客户资料打印</a></li>
+                <li><a href="<{:U('Client/index')}>">客户管理</a></li>
+                <li><a href="<{:U('Client/register')}>">客户录入</a></li>
+                <li><a href="<{:U('Client/transfer')}>">客户汇款</a></li>
+                <li><a href="<{:U('Client/record')}>">付款管理</a></li>
+
+                <li><a href="<{:U('Index/logout')}>">退出登录</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+{__CONTENT__}
+
+
+<div class="container-fluid navbar-fixed-bottom"
+     style="font-size: 15px;height: 50px;line-height: 50px;background: #f9f9f9;">
+
+    <div class="row">
+        <div class="col-xs-6">
+            <a style="text-decoration: none;color: black" href="<{:U('Pay/operation')}>"><i class="fa fa-history"
+                                                                               aria-hidden="true"></i>
+                操作日志</a>
+        </div>
+
+        <div class="col-xs-6  text-right">
+            <a style="text-decoration: none;color: black"><i class="fa fa-clock-o" aria-hidden="true"></i> <span
+                    id='txt'></span></a>
+        </div>
+    </div>
+</div>
+
+
+<script src="__PUBLIC__/js/jquery.goTop.js"></script>
+<script>
+    $(function () {
+        $('#go-top').goTop({
+            // top offset
+            scrollTop: 100,
+            // scroll speed in milliseconds
+            scrollSpeed: 1000,
+            // fade in/out speed in milliseconds
+            fadeInSpeed: 1000,
+            fadeOutSpeed: 500
+        });
+    })
+</script>
+<script>
+    function startTime() {
+        var today = new Date()
+        var h = today.getHours()
+        var m = today.getMinutes()
+        var s = today.getSeconds()
+
+        m = checkTime(m)
+        s = checkTime(s)
+        document.getElementById('txt').innerHTML = h + ":" + m + ":" + s
+        t = setTimeout('startTime()', 500)
+    }
+    function checkTime(i) {
+        if (i < 10) {
+            i = "0" + i
+        }
+        return i
+    }
+    startTime();
+</script>
+
+</body>
+</html>

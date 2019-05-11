@@ -1,0 +1,198 @@
+<div class="container" style="margin-top: 81px">
+    <div class="row text-center">
+
+        <div class="col-sm-4 col-sm-offset-2" style="padding-left: 115px">
+            <div class="form-group">
+                <input type="text" id="namesearch" class="form-control" id="inputPassword2" name="name"
+                       placeholder="请输入客户姓名">
+            </div>
+        </div>
+        <div class="col-sm-1" style="position: relative;left: -20px">
+            <button onclick="getid()" class="btn btn-default">查询</button>
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="container" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 col-xs-12">
+            <div id="searchresult" class="table-responsive">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--账单填写-->
+<div class="container" style="margin-top: 30px;margin-bottom: 100px">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 col-xs-12">
+
+            <form id="payform" action="<{:U('Client/updatetrans')}>" method="post">
+                <input type="hidden" class="form-control" name="id" value="<{$trans['id']}>">
+
+                <div class="form-group">
+                    <label for="exampleInputEmail1">客户姓名</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" name="name"
+                           value="<{$trans['name']}>" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="">汇款金额</label>
+                    <input type="text" class="form-control" name="amount" placeholder="请输入汇款金额"
+                           value="<{$trans['amount']}>">
+                </div>
+
+                <div class="form-group">
+                    <label for="">存入账户</label>
+                    <input type="text" class="form-control" name="account" placeholder="请输入账户"
+                           value="<{$trans['account']}>">
+                </div>
+
+                <div class="form-group">
+                    <label for="">存入方式</label>
+                    <input type="text" class="form-control" name="type" placeholder="请输入存入方式"
+                           value="<{$trans['type']}>">
+                </div>
+                <div class="form-group">
+                    <label for="">发票号码</label>
+                    <input type="text" class="form-control" name="receipt" placeholder="请输入发票号码"
+                           value="<{$trans['receipt']}>">
+                </div>
+
+                <div class="form-group">
+                    <label for="dtp_input2" class=" control-label">汇款时间</label>
+                    <div class="input-group date reg_time" data-date="" data-date-format="dd MM yyyy"
+                         data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                        <input class="form-control" size="16" name="transfertime" type="text"
+                               value='<{$trans["transfertime"]|date="d M Y",###}>' readonly>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                    <input type="hidden" id="dtp_input2"/><br/>
+                </div>
+
+                <div class="form-group">
+                    <label for="">附注</label>
+                    <input type="text" class="form-control" name="remark" placeholder="请写入附注"
+                           value="<{$trans['remark']}>">
+                </div>
+
+                <br>
+                <br>
+                <button type="submit" class="btn btn-primary">确认修改</button> &nbsp;&nbsp; <a
+                    href="<{$Think.cookie.historypage}>" class="btn btn-default">暂不修改</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="__PUBLIC__/js/jquery1.11.1.min.js"></script>
+<script src="__PUBLIC__/dist/js/bootstrap.min.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-validator/bootstrapValidator.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/dist/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+
+<script>
+    $(function () {
+
+        $('#payform').bootstrapValidator({
+            fields: {
+                amount: {
+                    validators: {
+                        notEmpty: {
+                            message: '金额不能为空'
+                        },
+                        numeric: {
+                            message: '请输入数字'
+                        }
+                    }
+                },
+                account: {
+                    validators: {
+                        notEmpty: {
+                            message: '请填写存入帐户'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 20,
+                            message: '存入帐户请为1-20位字符'
+                        }
+                    }
+                },
+                type: {
+                    validators: {
+                        notEmpty: {
+                            message: '汇款方式不能为空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 20,
+                            message: '汇款方式最多为20位字符'
+                        }
+                    }
+                },
+                remark: {
+                    validators: {
+                        notEmpty: {
+                            message: '用途备注不能为空'
+                        },
+                        stringLength: {
+                            min: 3,
+                            max: 50,
+                            message: '用途备注请为3-50位字符'
+                        }
+                    }
+                },
+                receipt: {
+                    validators: {
+                        notEmpty: {
+                            message: '发票号码不能为空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 20,
+                            message: '发票号码最多为20位字符'
+                        }
+                    }
+                }
+            }
+        });
+
+        $('.reg_time').datetimepicker({
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+
+        });
+
+        $('.navbar-nav li:eq(7)').addClass('active');
+
+
+    });
+    function getid() {
+        var clientname = document.getElementById('namesearch').value;
+        if (clientname == '') {
+            alert('请输入客户名字');
+        } else {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    document.getElementById('searchresult').innerHTML = (xhr.responseText);
+                }
+            };
+            clientname = encodeURIComponent(clientname);
+            var url = '<{:U("Pay/search")}>' + '?name=' + clientname;
+            xhr.open('get', url);
+            xhr.send(null);
+        }
+    }
+
+</script>
+

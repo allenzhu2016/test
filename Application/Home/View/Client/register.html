@@ -1,0 +1,150 @@
+<!--账单填写-->
+<div class="container" style="margin-top: 100px;padding-bottom: 100px">
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 col-xs-12">
+
+            <form role="form" id="clientform" action="<{:U('Client/handle')}>" method="post">
+
+                <div class="form-group">
+                    <label for="clientname">客户姓名</label>
+                    <input type="text" name="name" class="form-control" id="clientname" placeholder="请输入客户姓名">
+                    <!--<input id="example1" type="text" name="country" placeholder="请输入客户姓名" class="form-control">-->
+                </div>
+
+                <div class="form-group">
+                    <label for="">销售类型</label><br>
+                    <label class="radio-inline">
+                        <input type="radio" name="saletype" id="inlineRadio1" value="独立销售" checked> 独立销售
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="saletype" id="inlineRadio2" value="合作销售"> 合作销售
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword3">销售顾问</label>
+                    <input type="text" name="sale" class="form-control" id="exampleInputPassword3" placeholder="请输入销售顾问">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword4">Reference No.</label>
+                    <input type="text" name="referencenum" class="form-control" id="exampleInputPassword4" placeholder="请输入客户Reference No.">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword5">当前余额</label>
+                    <input type="text" name="balance" class="form-control" id="exampleInputPassword5" placeholder="请输入账户余额" value="0.00">
+                </div>
+
+                <div class="unit form-group" id="add-container">
+                    <label>客户房产 </label>
+
+                    <div class="row">
+                    <div class="col-xs-6">
+                    <input style="margin-bottom: 14px" type="text" name="lot[]" placeholder="例如:Lot 188 Saltwater" class="form-control">
+                    </div>
+                    <div class="col-xs-3">
+                        <input style="margin-bottom: 14px;" type="text" name="loancomp[]" placeholder="贷款公司" class="form-control">
+                    </div>
+                        <div class="col-xs-3">
+                        <input style="margin-bottom: 14px;" type="text" name="passtime[]" placeholder="过户时间"  data-date-format="yyyy-mm-dd"  class="form-control reg_time">
+                    </div>
+                    </div>
+                </div>
+                <p class="text-right"><span id='add' class="btn btn-default btn-sm">新增房产</span></p>
+                <button type="submit" class="btn btn-primary"><span class="fa fa-check"></span> 确认注册</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="__PUBLIC__/js/jquery1.11.1.min.js"></script>
+<script src="__PUBLIC__/dist/js/bootstrap.min.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-validator/bootstrapValidator.min.js"></script>
+<script src="__PUBLIC__/dist/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#clientform').bootstrapValidator({
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '请填写客户'
+                        },
+                        stringLength: {
+                            min: 2,
+                            max: 50,
+                            message: '名字请在2-50个字符之间~'
+                        },
+                        threshold:2 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
+                        remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
+                            url: '<{:U("client/clientname")}>',//验证地址
+                            message: '该名字已经存在',//提示消息
+                            delay :  500,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
+                            type: 'GET'//请求方式
+                        }
+                    }
+                },
+
+                balance: {
+                    validators: {
+                        notEmpty: {
+                            message: '请填写该客户的Lot'
+                        },
+                        between:{
+                            min:0,
+                            max:1000000,
+                            message:'请输入0-1,000,000之间的数字'
+                        }
+                    }
+                },
+                sale: {
+                    validators: {
+                        notEmpty: {
+                            message: '请填写销售顾问'
+                        }
+                    }
+                },
+                referencenum: {
+                    validators: {
+                        stringLength: {
+                            min: 5,
+                            max: 5,
+                            message: 'Reference Number应为5位字符'
+                        }
+                    }
+                }
+            }
+        });
+
+        $('.navbar-nav li:eq(6)').addClass('active');
+
+
+    var html='<div class="row"> <div class="col-xs-6"> <input style="margin-bottom: 14px" type="text" name="lot[]" placeholder="例如:Lot 188 Saltwater" class="form-control"> </div> <div class="col-xs-3"> <input style="margin-bottom: 14px;" type="text" name="loancomp[]" placeholder="贷款公司" class="form-control"> </div> <div class="col-xs-3"> <input style="margin-bottom: 14px;" type="text" name="passtime[]" placeholder="过户时间"  data-date-format="yyyy-mm-dd"  class="form-control reg_time"> </div> </div>'
+        //add点击新增输入框
+
+        function datetimepickerconfig() {
+            $('.reg_time').datetimepicker({
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 3,
+                forceParse: 1,
+
+            });
+            $('.reg_time').datetimepicker('refresh');
+        };
+         datetimepickerconfig();
+
+        $('#add').click(function () {
+            $('#add-container').append(html);
+            datetimepickerconfig();
+        })
+
+
+    });
+</script>
+

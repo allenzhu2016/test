@@ -1,0 +1,160 @@
+<div class="container" style="margin-top: 81px">
+    <form id="transferform" role="form" method="get" action="<{:U('client/record')}>">
+        <div class="row">
+
+            <div class="col-xs-12 col-sm-4 col-md-3" style="margin-bottom: 14px">
+                <select class="selectpicker" name="query_type">
+                    <option value="1"
+                    <?php if(isset($query['type']) && $query['type']=='1'){echo 'selected="selected"';}?>>按客户姓名</option>
+                    <option value="2"
+                    <?php if(isset($query['type']) && $query['type']=='2'){echo 'selected="selected"';}?> >按距离今日 X
+                    天</option>
+                    <option value="3"
+                    <?php if(isset($query['type']) && $query['type']=='3'){echo 'selected="selected"';}?>
+                    >按备注(多条件请用and隔开)</option>
+                    <option value="4"
+                    <?php if(isset($query['type']) && $query['type']=='4'){echo 'selected="selected"';}?> >按发票</option>
+                    <option value="5"
+                    <?php if(isset($query['type']) && $query['type']=='5'){echo 'selected="selected"';}?> >按方式</option>
+                </select>
+            </div>
+            <div class="col-xs-7 col-sm-3 col-md-2" style="margin-bottom: 14px">
+                <input type="text" value="<?php if(isset($query['query']) && $query['query']){echo $query['query'];}?>"
+                       name="query" class="form-control" placeholder="请输入查询信息">
+            </div>
+            <div class="col-xs-1 col-sm-2" style="margin-bottom: 14px">
+                <button type="submit" class="btn btn-default"><span class="fa fa-search"></span> 查询客户汇款</button>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-2">
+                <a href="<{:U('Client/record')}>" class="btn btn-default"><i class="fa fa-exchange" aria-hidden="true"></i> 全部客户汇款</a>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+<!--已录入编辑-->
+<div class="container" style="margin-top: 30px;margin-bottom: 100px">
+    <div class="col-sm-12 col-xs-12" style="margin-top: -18px;margin-bottom: 10px;margin-left: -15px">
+        <div>
+            系统本次为您查到 <{$count}> 笔汇款</span> </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12  col-xs-12">
+
+            <div class="table-responsive table-record" style="display: none">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+
+                        <th>姓名</th>
+                        <th>房产</th>
+                        <th>汇款时间</th>
+                        <th>汇款金额</th>
+                        <th>存入帐户</th>
+                        <th>发票</th>
+                        <th>方式</th>
+                        <th>备注</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <volist name="transfer" id="t">
+                        <tr>
+
+                            <td style="width: 150px;"><{$t['name']}></td>
+                            <td style="width: 350px;"><{$t['property']}></td>
+                            <td style="width: 120px;font-size: 12px"><{$t['transfertime']|date="Y-m-d",###}></td>
+                            <td style="width: 120px;font-weight:700;font-size: 14px;color: #100809">$<{$t['amount']}>
+                            </td>
+                            <td style="width: 100px;font-size: 12px"><{$t['account']}></td>
+                            <td style="width: 80px;font-size: 12px"><{$t['receipt']}></td>
+                            <td style="width: 100px"><{$t['type']}></td>
+                            <td style="width: 350px"><{$t['remark']}></td>
+                            <td style="width: 250px"><a href="<{:U('Client/edittransfer',array('id'=>$t['id']))}>"
+                                                        class="btn btn-sm btn-primary"><span class="fa fa-edit"></span> 编辑</a>
+                                <a href="<{:U('Client/deletetrans',array('id'=>base64_encode($t['id'])))}>"
+                                   class="btn delete btn-sm btn-default"><span class="fa fa-trash"></span> 撤销</a></td>
+                        </tr>
+                    </volist>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <nav>
+                <ul class="pagination">
+                    <{$page}>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<script src="__PUBLIC__/js/jquery1.11.1.min.js"></script>
+<script src="__PUBLIC__/dist/js/bootstrap.min.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-validator/bootstrapValidator.min.js"></script>
+<script src="__PUBLIC__/dist-select/js/bootstrap-select.js"></script>
+<script src="__PUBLIC__/js/bootbox.min.js"></script>
+<script>
+
+    $('.navbar-nav li:eq(8)').addClass('active');
+    $(".delete").click(function (event) {
+        var cur = this;
+        event.preventDefault();
+        bootbox.confirm({
+
+            message: "温馨提示:一经撤销不可恢复喔...",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> 取消'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> 确认'
+                }
+            },
+            callback: function (result) { /* result is a boolean; true = OK, false = Cancel*/
+                if (result) {
+                    window.location.href = $(cur).attr("href");
+                }
+            }
+        });
+    });
+
+
+</script>
+
+<script>
+    $(function () {
+        $('.table-record').fadeIn(1500);
+        $('#transferform').bootstrapValidator({
+            fields: {
+                query: {
+                    validators: {
+                        notEmpty: {
+                            message: '搜索信息不能为空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 10,
+                            message: '搜索信息最多为10个字符'
+                        }
+                    }
+                }
+            }
+        });
+
+    });
+
+
+</script>
