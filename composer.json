@@ -1,0 +1,14 @@
+{
+    "name": "allenzhu2016/test",
+    "description": "test purpose",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "allen",
+            "email": "442550541@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
