@@ -1,7 +1,10 @@
 {
     "name": "allenzhu2016/test",
-    "description": "test purpose",
+    "description": "test用请勿使用",
     "type": "project",
+    "require": {
+        "squizlabs/php_codesniffer": "^3.4"
+    },
     "license": "MIT",
     "authors": [
         {
@@ -9,6 +12,5 @@
             "email": "442550541@qq.com"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {}
+    "minimum-stability": "dev"
 }
